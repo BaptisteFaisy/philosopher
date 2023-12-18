@@ -1,0 +1,11 @@
+{
+	"editor.fontSize": 14,
+	"cmake.configureOnOpen": true,
+	"makefile.launchConfigurations": [
+		{
+			"cwd": "/home/bfaisy/Documents/lib/philosopher",
+			"binaryPath": "/home/bfaisy/Documents/lib/philosopher/philo",
+			"binaryArgs": ["5", "800", "200", "200"]
+		}
+	]
+}
