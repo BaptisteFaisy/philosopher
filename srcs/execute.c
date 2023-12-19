@@ -6,7 +6,7 @@
 /*   By: bfaisy <bfaisy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/16 11:29:24 by bfaisy            #+#    #+#             */
-/*   Updated: 2023/12/18 21:46:16 by bfaisy           ###   ########.fr       */
+/*   Updated: 2023/12/19 12:38:43 by bfaisy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,19 +64,19 @@ long	ft_atoi(const char *str)
 	return (number * sign);
 }
 
-void	endv2(t_list *cur, struct timeval time)
+void	endv2(t_list *cur, struct timeval time, struct timeval tv, long start)
 {
 	if (!*cur->died)
 		printf("time : %ld, %d is eating \n", (time.tv_sec * 1000 + time.tv_usec
 				/ 1000) - cur->start, cur->id);
-	usleep(cur->time_to_eat * 1000);
+	sleep_eat(cur, time, tv, start);
 	pthread_mutex_unlock(&(cur->mutex));
 	pthread_mutex_unlock(&(cur->next->mutex));
 	gettimeofday(&time, NULL);
 	if (!*cur->died)
 		printf("time : %ld, %d is sleeping\n",
 			(time.tv_sec * 1000 + time.tv_usec / 1000) - cur->start, cur->id);
-	usleep(cur->time_to_sleep * 1000);
+	sleep_sleep(cur, time, tv, start);
 	gettimeofday(&time, NULL);
 	if (!*cur->died)
 		printf("time : %ld, %d is thinking\n",
@@ -85,25 +85,29 @@ void	endv2(t_list *cur, struct timeval time)
 
 long	startv2(t_list *cur, struct timeval time, struct timeval tv, long start)
 {
-	long				end;
-
 	pthread_mutex_lock(&(cur->mutex));
 	gettimeofday(&time, NULL);
 	if (!*cur->died)
 		printf("time : %ld, %d has taken a fork\n", ((time.tv_sec
 					* 1000 + time.tv_usec / 1000) - cur->start), cur->id);
 	pthread_mutex_lock(&(cur->next->mutex));
-	gettimeofday(&tv, NULL);
-	end = (tv.tv_sec * 1000000 + tv.tv_usec);
-	if ((end - start) > cur->time_to_die * 10)
-	{
-		gettimeofday(&time, NULL);
-		if (!*cur->died)
-			printf("time : %ld, %d died\n", ((time.tv_sec * 1000
-						+ time.tv_usec / 1000) - cur->start), cur->id);
-		*(cur->died) = 1;
+	if (check_if_died(cur, time, tv, start) == 1)
 		return (-1);
+	endv2(cur, time, tv, start);
+	return (0);
+}
+
+int	sleep_eat(t_list *cur, struct timeval time, struct timeval tv, long start)
+{
+	int	i;
+
+	i = 0;
+	while (i * 10 != cur->time_to_eat)
+	{
+		if (check_if_died(cur, time, tv, start) == 1)
+			return (1);
+		usleep (1000 * 10);
+		i++;
 	}
-	endv2(cur, time);
 	return (0);
 }

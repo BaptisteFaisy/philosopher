@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
 DIR = srcs
-SRCS_RAW = philo.c execute.c
+SRCS_RAW = philo.c execute.c died.c
 SRCS = $(addprefix $(DIR)/,$(SRCS_RAW)) \
 
 OBJS = $(SRCS:c=o)

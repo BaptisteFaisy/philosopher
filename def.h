@@ -6,7 +6,7 @@
 /*   By: bfaisy <bfaisy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 13:56:38 by bfaisy            #+#    #+#             */
-/*   Updated: 2023/12/18 21:49:06 by bfaisy           ###   ########.fr       */
+/*   Updated: 2023/12/19 12:09:08 by bfaisy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,14 @@ t_list	*create_head(char **av, pthread_mutex_t globalmutex, int ac);
 void	*execute(void *cur);
 void	end(t_list *head, char **av, int nbr);
 int		end_thread(struct timeval tv, long start, t_list *cur, long end);
-void	endv2(t_list *cur, struct timeval time);
+void	endv2(t_list *cur, struct timeval time, struct timeval tv, long start);
 long	startv2(t_list *cur, struct timeval time, struct timeval tv,
 			long start);
+int		check_if_died(t_list *cur, struct timeval time,
+			struct timeval tv, long start);
+int		sleep_eat(t_list *cur, struct timeval time,
+			struct timeval tv, long start);
+int		sleep_sleep(t_list *cur, struct timeval time,
+			struct timeval tv, long start);
 
 #endif
